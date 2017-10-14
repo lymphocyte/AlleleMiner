@@ -1,0 +1,4 @@
+TRBD1 Haplotypes between 142786213 : 142786224 1
+Allele1 GGGACAGGGGGC count is 5008 ***Main allele***
+TRBD2 Haplotypes between 142795705 : 142795720 1
+Allele1 GGGACTAGCGGGAGGG count is 5008 ***Main allele***
