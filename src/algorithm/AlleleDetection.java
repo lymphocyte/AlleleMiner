@@ -17,9 +17,9 @@ public class AlleleDetection {
     private ArrayList<String> indexed_snps;
     private ArrayList<Haplotype> Haplotype_factory = new ArrayList<Haplotype>();
     private int[] snp_positions;
-    private boolean testDatabase;// this will decide if it's in the test mode,
+    private boolean testDatabase; // This will decide if it's in the test mode,
 				 // which will randomly reduce 10 percent of the
-				 // amount of haplotypes.
+				 // amount of Haplotypes.  
     private double percentage_of_alleles_to_reduce = 0.1;
     private int sample_size;
     private int info_length = 9;
@@ -71,7 +71,7 @@ public class AlleleDetection {
 
 	Haplotype[] snp_haplotypes = new Haplotype[this.sample_size * 2];
 	/*
-	 * Initialize haplotypes
+	 * Initialize Haplotypes
 	 */
 
 	for (int i = 0; i < snp_haplotypes.length; i++) {
@@ -108,7 +108,7 @@ public class AlleleDetection {
 
 	    }
 	    /*
-	     * put 0|1 structures of each SNP in an array.
+	     * Put 0|1 structures of each SNP in an array.
 	     */
 	    int[] snp_map = new int[this.sample_size * 2];
 	    int tmp_counter = 0;
@@ -136,7 +136,7 @@ public class AlleleDetection {
 		}
 	    }
 	    /*
-	     * put the ref nt and alt nt in the dictionary.
+	     * Put the Ref Neuclotide and Alternative Neuclotide in the dictionary.
 	     */
 	    int nt_num = temp_content[4].split(",").length;
 	    String[] Dictionary = new String[nt_num + 1];
@@ -157,7 +157,7 @@ public class AlleleDetection {
 	HashMap<String, Integer> hap_collection = new HashMap<String, Integer>();
 
 	/*
-	 * Here we reduce the amount of the haplotypes if this is in test mode.
+	 * Here the number of the haplotypes is reduced if this is in test mode.
 	 */
 	Haplotype[] final_snp_haplotypes;
 	if (this.testDatabase) {
