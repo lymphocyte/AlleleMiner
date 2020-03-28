@@ -1,3 +1,4 @@
+/// Class to compare seqs with IMGT.
 package algorithm;
 
 import java.io.BufferedReader;
@@ -126,12 +127,15 @@ public class Compare_With_IMGT {
 
     }
 
-    private void MappingGeneData() throws CompoundNotFoundException, IOException {
-	/*
-	 * Convert the novel allele data into a nested hashmap
+	
+/*
+	 * Following function Convert the novel allele data into a nested hashmap
 	 * 
 	 * gene - allele - info
-	 */
+	 */	
+	
+    private void MappingGeneData() throws CompoundNotFoundException, IOException {
+	
 	HashMap<String, HashMap<String, String>> allele_container = new HashMap<String, HashMap<String, String>>();
 	for (int i = 0; i < this.allele_container.size(); i++) {
 	    String seq = this.allele_container.get(i);
