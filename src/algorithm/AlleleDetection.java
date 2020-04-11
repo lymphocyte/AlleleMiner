@@ -1,5 +1,6 @@
-package algorithm;
+package algorithm; //file is included in package algorithm
 
+//include java built-in classes
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,13 +10,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 
+//another package is included
 import tools.ReverseCompliment;
 
-public class AlleleDetection {
+public class AlleleDetection { //main class of the file
     private String ref_seq;
     // private String snp_raw_result;
     private ArrayList<String> indexed_snps;
-    private ArrayList<Haplotype> Haplotype_factory = new ArrayList<Haplotype>();
+    private ArrayList<Haplotype> Haplotype_factory = new ArrayList<Haplotype>(); //an ArrayList of Haplotype which is another in algorithm package
     private int[] snp_positions;
     private boolean testDatabase; // This will decide if it's in the test mode,
 				 // which will randomly reduce 10 percent of the
@@ -31,12 +33,13 @@ public class AlleleDetection {
     private String[] sample_ids;
     private String folder_path;
     private String rev_info = null;
-    private HashMap<String, String> sample_map = new HashMap<String, String>();
+    private HashMap<String, String> sample_map = new HashMap<String, String>(); //hash map with key and value both are strings
 
+    //parameterized constructor
     public AlleleDetection(String ref_gene_seq, ArrayList<String> snp_indexed_result, int start_index, int end_index,
 	    String genename, String result, String[] sample_IDs, HashMap<String, String> sample_map,
-	    boolean testDatabase, String folder_path, String rev_info) throws IOException {
-	this.final_result = result;
+	    boolean testDatabase, String folder_path, String rev_info) throws IOException { //IO Excetion is for File handling classes
+	this.final_result = result; //this is used to refer the data members of the class
 	this.folder_path = folder_path;
 	this.genename = genename;
 	this.ref_seq = ref_gene_seq;
@@ -50,7 +53,7 @@ public class AlleleDetection {
 		+ this.rev_info + System.lineSeparator();
 	if (snp_indexed_result.size() == 0) {
 	    String tmp_seq = "Allele" + 1 + " " + this.ref_seq + " count is 5008 ***Main allele***"
-		    + System.lineSeparator();
+		    + System.lineSeparator(); //line seperator for new line
 	    System.out.println(tmp_seq);
 	    this.final_result += tmp_seq;
 	    return;
@@ -88,10 +91,10 @@ public class AlleleDetection {
 	    String[] temp_content = this.indexed_snps.get(i).split("\t");
 	    this.snp_positions[i] = Integer.parseInt(temp_content[1]) - this.start_index;
 	    if (this.ref_seq.charAt(this.snp_positions[i]) != temp_content[3].charAt(0)) {
-
+		    //charAt: function used to return the character from specific index
 		String ref_nt = this.ref_seq.charAt(this.snp_positions[i]) + "";
 		ReverseCompliment RevC = new ReverseCompliment(temp_content[3].charAt(0) + "");
-		String vcf_nt = RevC.getReverseCompliment();
+		String vcf_nt = RevC.getReverseCompliment(); //according to my rnd, reverse compliment for DNA is described at the end of file
 		if (vcf_nt.charAt(0) == ref_nt.charAt(0)) {
 		    // If the VCF file is reversed, then we reverse it back to
 		    // the right order.
@@ -102,8 +105,8 @@ public class AlleleDetection {
 		    System.out.println("Something wrong with the index!");
 		    System.out.println(temp_content[2] + "-" + temp_content[1] + "-" + temp_content[3] + "==>"
 			    + temp_content[4] + "-" + this.ref_seq.charAt(this.snp_positions[i]) + "");
-		    System.exit(0);
-		    continue;
+		    System.exit(0); //terminate the program
+		    continue; //again go for next iteration
 		}
 
 	    }
@@ -112,7 +115,7 @@ public class AlleleDetection {
 	     */
 	    int[] snp_map = new int[this.sample_size * 2];
 	    int tmp_counter = 0;
-	    for (int m = this.info_length; m < snp_map.length / 2; m++) {
+	    for (int m = this.info_length; m < snp_map.length / 2; m++) { //length: size of snp_map
 		if (m >= temp_content.length) {
 		    System.out.println("out of border");
 		    continue;
@@ -121,7 +124,7 @@ public class AlleleDetection {
 		// temp_str is 1|0
 		String temp_str = temp_content[m];
 		if (temp_str.length() == 3) {
-		    snp_map[tmp_counter] = Integer.parseInt(temp_content[m].split("\\|")[0]);
+		    snp_map[tmp_counter] = Integer.parseInt(temp_content[m].split("\\|")[0]);//parseInt: convert string to integer
 		    tmp_counter++;
 		    snp_map[tmp_counter] = Integer.parseInt(temp_content[m].split("\\|")[1]);
 		    tmp_counter++;
@@ -209,7 +212,7 @@ public class AlleleDetection {
 
     private Haplotype[] ReduceRandomPortionOfHaplotypes(Haplotype[] raw_data) {
 	Random rand = new Random();
-	int randomNum = rand.nextInt(5007);
+	int randomNum = rand.nextInt(5007);//generate integers range 0 to 5006
 	ArrayList<Integer> random_position_to_remove = new ArrayList<Integer>();
 	int size = (int) (5008 * this.percentage_of_alleles_to_reduce);
 	while (random_position_to_remove.size() != size) {
@@ -274,3 +277,28 @@ public class AlleleDetection {
 	fw.close();
     }
 }
+/*
+Reverse Compliment:
+String input: GGGGaaaaaaaatttatatat
+String output: atatataaattttttttCCCC
+
+1. Now, convert each character from input to another character according to the following mapping
+public Character execute(Character a) {
+'a' -> 't'
+'A '-> 'T'
+'t' -> 'a'
+'T' -> 'A'
+'g' -> 'c'
+'G' -> 'C'
+'c' -> 'g'
+'C' -> 'G'
+'any other' -> 'N' which means i think undefined
+
+if we apply to input then, "CCCCttttttttaaatatata"
+
+2. Revese the result for final output i.e. atatataaattttttttCCCC
+
+references
+https://github.com/gifford-lab/GEM/blob/master/src/edu/mit/csail/cgs/ewok/verbs/motifs/ReverseComplement.java
+https://www.bioinformatics.org/sms/rev_comp.html
+*/
