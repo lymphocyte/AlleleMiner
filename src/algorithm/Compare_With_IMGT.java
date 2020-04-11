@@ -1,6 +1,7 @@
 /// Class to compare seqs with IMGT.
-package algorithm;
+package algorithm; //file is in package algorithm
 
+//including built-in classes
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,6 +13,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 
+//including some other package classes
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.template.Sequence;
@@ -29,24 +31,29 @@ import org.biojava.nbio.core.sequence.io.FastaReaderHelper;
 import tools.GetRefGene;
 import tools.ReverseCompliment;
 
+//main class of the file as it is a public class
 public class Compare_With_IMGT {
 
-    ArrayList<String> allele_container = new ArrayList<String>();
-    private String[][] Ref_Gene;
+    ArrayList<String> allele_container = new ArrayList<String>(); //an arraylist with access modifier is default which is only accessible in the current package algorithm
+    private String[][] Ref_Gene; //2-d array of String class
     private int novel_size;
-    private HashMap<String, HashMap<String, String>> allele_container_imgt;
+    private HashMap<String, HashMap<String, String>> allele_container_imgt; //double hash map, key is String type and value is again HashMap of <String=key, String=value>
     private HashMap<String, HashMap<String, String>> allele_container_novel;
     private String output_prefix = "1000_igh_ref";
     private String gene_type = "";
     private String VJ_type = "";
     private int shiftNUM = 0;
     private String all_files = "";
-    private String outputFolder = System.getProperty("user.dir") + "/";
+    private String outputFolder = System.getProperty("user.dir") + "/"; //getProperty of the key "user.dir", which means the return the current working directory
     private String output_all_path = "/Users/yuyaxuan/Desktop/lymDB/Alleles/simulations/simu1.fastq";
     private ArrayList<String> function_genes = new ArrayList<String>();
 
     public Compare_With_IMGT(ArrayList<String> allele_container, String vjtype, String IMGT_genetype, int number)
 	    throws IOException, CompoundNotFoundException {
+	/*
+	->IOException: exception in the streaming or in simple words file handling types
+	->CompoundNotFound: If compound statement does not exist, etc
+	*/
 	this.allele_container = allele_container;
 	output_all_path = "/Users/yuyaxuan/Desktop/lymDB/Alleles/simulations/simu" + number + ".fastq";
 	this.VJ_type = vjtype;
@@ -60,7 +67,7 @@ public class Compare_With_IMGT {
 		// System.out.println("there are " +
 		// getRef.get_Hm_IGHV().length);
 		if (VJ_type.contains("V")) {
-		    tmpAry.add(getRef.get_Hm_IGHV());
+		    tmpAry.add(getRef.get_Hm_IGHV()); //add data in the arrayList tmpAry
 		}
 		if (VJ_type.contains("J")) {
 		    tmpAry.add(getRef.get_Hm_IGHJ());
@@ -106,16 +113,16 @@ public class Compare_With_IMGT {
 	WriteExampleRef();
     }
 
-    private String[][] MergeArrayIntoOne(ArrayList<String[][]> al) {
+    private String[][] MergeArrayIntoOne(ArrayList<String[][]> al) { //an array list in which each value is of 2-d string array
 	int size = 0;
-	for (int i = 0; i < al.size(); i++) {
-	    size += al.get(i).length;
+	for (int i = 0; i < al.size(); i++) { //size of array list means number of indexs in array list
+	    size += al.get(i).length; //finding the length of index i which is most probably 2
 	}
-	String[][] refgene = new String[size][2];
+	String[][] refgene = new String[size][2]; //2 d string matrix having column size is 2 and row size is size
 	int counter = 0;
 	for (int i = 0; i < al.size(); i++) {
 	    for (int j = 0; j < al.get(i).length; j++) {
-		refgene[counter] = al.get(i)[j];
+		refgene[counter] = al.get(i)[j]; //find the ith string matrix and the jth row of that matrix
 		counter++;
 	    }
 	}
@@ -142,12 +149,12 @@ public class Compare_With_IMGT {
 	    String[] tmp = seq.split(",");
 	    String allele_name = tmp[0] + "p";
 	    String allele_seq = tmp[1];
-	    String genename = allele_name.split("\\*")[0].substring(1);
+	    String genename = allele_name.split("\\*")[0].substring(1); //split allele_name on * and retrieve the 0 index string and the get the subtring from index 1 to rest of the string
 	    if (genename.contains(VJ_type)) {
-		if (allele_container.containsKey(genename)) {
+		if (allele_container.containsKey(genename)) { //if genename is present in allele_container then return true otherwise false
 		    HashMap<String, String> tmp_inside_allele_container = allele_container.get(genename);
-		    tmp_inside_allele_container.put(allele_name, allele_seq);
-		    allele_container.put(genename, tmp_inside_allele_container);
+		    tmp_inside_allele_container.put(allele_name, allele_seq); //place allele_name as key and allele_seq as value
+		    allele_container.put(genename, tmp_inside_allele_container); //place genename as key and tmp_inside_allele_container as value
 		} else {
 		    HashMap<String, String> tmp_inside_allele_container = new HashMap<String, String>();
 		    tmp_inside_allele_container.put(allele_name, allele_seq);
@@ -157,8 +164,12 @@ public class Compare_With_IMGT {
 	}
 	int counter = 0;
 	Iterator<String> it = allele_container.keySet().iterator();
-	while (it.hasNext()) {
-	    String genename = it.next();
+	/*
+	->keySet(): return the keys of allele_container in a form of Set
+	->iterator(): generate a Interator against the values present in the Set
+	*/
+	while (it.hasNext()) { //if there is any next element to iterate then return true and move to the first location then second and so on otherwise false
+	    String genename = it.next(); //retrieve the next element
 	    // System.out.println(genename + ":");
 	    Iterator<String> it_inside = allele_container.get(genename).keySet().iterator();
 	    while (it_inside.hasNext()) {
@@ -205,7 +216,7 @@ public class Compare_With_IMGT {
     }
 
     private void ComparingIMGTwithNovel() throws CompoundNotFoundException, IOException {
-	ArrayList<String> novel_results = new ArrayList<String>();
+	ArrayList<String> novel_results = new ArrayList<String>(); //array list of string type
 	int total = 0;
 	int sub = 0;
 	int another = 0;
@@ -245,7 +256,7 @@ public class Compare_With_IMGT {
 	     */
 	    if (this.allele_container_novel.containsKey(genename)) {
 
-		HashMap<String, String> tmp = this.allele_container_imgt.get(genename);
+		HashMap<String, String> tmp = this.allele_container_imgt.get(genename); //return value against key named genename from allele_container_imgt hash map
 		Iterator<String> it_inside = tmp.keySet().iterator();
 		novel_total += this.allele_container_novel.get(genename).size();
 		while (it_inside.hasNext()) {
@@ -254,7 +265,8 @@ public class Compare_With_IMGT {
 		    if (this.VJ_type.contains("V")) {
 			last_num = this.shiftNUM;
 		    }
-		    String imgt_seq = this.allele_container_imgt.get(genename).get(allelename);
+		    String imgt_seq = this.allele_container_imgt.get(genename).get(allelename); /*first return value from allele_container_imgt which is hashmap<String, String> and the
+												again get value from it against key names allelename*/  
 
 		    Iterator<String> it_novel = this.allele_container_novel.get(genename).keySet().iterator();
 		    int flag = 0;
@@ -279,12 +291,18 @@ public class Compare_With_IMGT {
 			if (novel_allele.contains(imgt_allele.substring(last_num, imgt_allele.length() - last_num))
 				|| rev_novel_allele
 					.contains(imgt_allele.substring(last_num, imgt_allele.length() - last_num))) {
-			    if (!alreadyADD) {
+				/*
+				->contains: it returns true if the given string (as a paramter) is present as a substring in the main string (by which contains is called) otherwise return false.
+					its method of finding the substring is case-sensitive
+				->substring:(int start): it simply retrieves the substring of the main string (by which function is called) from start index to length-1
+				->subtring:(int start, int end): it retrieves the substring of the main string (by which function is called) from start index to end-1
+				*/
+			    if (!alreadyADD) { //boolean variable defined above
 				novel_matched++;
 				alreadyADD = true;
 			    }
 			    flag++;
-			    if (novel_results.contains(novel_allele_name)) {
+			    if (novel_results.contains(novel_allele_name)) { //find novel_allele_name in novel_results and return true/false accordingly
 
 			    } else {
 				novel_results.add(novel_allele_name);
@@ -306,7 +324,7 @@ public class Compare_With_IMGT {
 			// local alignment algorithm.
 			String IMGT_allle_seq = this.allele_container_imgt.get(genename).get(allelename);
 			result_imgt_not_in_novel += allelename + System.lineSeparator() + IMGT_allle_seq
-				+ System.lineSeparator();
+				+ System.lineSeparator(); // System.lineSeperator: for new line, in windows \r\n and in UNIX \n
 			Iterator<String> aligner_itetrator = this.allele_container_novel.get(genename).keySet()
 				.iterator();
 
@@ -389,9 +407,11 @@ public class Compare_With_IMGT {
 	}
 
 	write_result_of_ale_info(IMGT_allele_result_info);
-	FileWriter fw = new FileWriter(new File("Alleles_without_gene.txt"));
-	fw.write(resut_imgt_gene_not_found);
-	fw.close();
+	FileWriter fw = new FileWriter(new File("Alleles_without_gene.txt")); //fileWriter: used for writing file. if file is not present, it will create it. By default it is not in appending mode. Every time a new file will be created
+	fw.write(resut_imgt_gene_not_found); //write resut_imgt_gene_not_found in file
+	fw.close(); //close the FileWriter object
+        //FileWriter and its use can cause IOException, so we have to handle it explicitly
+	
 	// System.out.println();
 	novel_size = novel_total;
 	System.out.print(novel_size + ",");
@@ -439,7 +459,7 @@ public class Compare_With_IMGT {
 		    String allelename = it_imgt.next();
 		    String seq = allele_container_novel.get(gene).get(allelename);
 		    if (allelename.contains("V")) {
-			sb_V.append(allelename);
+			sb_V.append(allelename); // add allelename at the end of sb_V string
 			sb_V.append(System.lineSeparator());
 			sb_V.append(seq);
 			sb_V.append(System.lineSeparator());
@@ -597,14 +617,14 @@ public class Compare_With_IMGT {
 	    }
 	}
 
-	FileWriter fw = new FileWriter(all_path);
+	FileWriter fw = new FileWriter(all_path); //all_path is defined above
 	fw.write(write_to_file);
 	fw.close();
     }
 
     private ArrayList<String> getGenenames(String filename) throws IOException {
-	BufferedReader br = new BufferedReader(new FileReader(filename));
-	String line = br.readLine();
+	BufferedReader br = new BufferedReader(new FileReader(filename)); //BufferedReader and FileReader are the object for file reading
+	String line = br.readLine();//read a single line upto to \n
 	String[] ary = line.split(",");
 	return new ArrayList<String>(Arrays.asList(ary));
     }
